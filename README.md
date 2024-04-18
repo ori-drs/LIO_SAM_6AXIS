@@ -1,6 +1,12 @@
+### For DRS Users **
+- I have created a new branch dev/frontier_hesai_ho with frontier_15 config added. 
+- I provided testing data of frontier-15 (outdoor, forest) [bag files](https://drive.google.com/drive/folders/1BcmJPnkOohHhF5WopIVAlTjOYBDomBGQ?usp=drive_link) 
+```bash
+roslaunch lio_sam_6axis frontier_hesai.launch
+rosbag play frontier_2023-05-05-0* --pause --clock --topics /alphasense_driver_ros/imu /hesai/pandar 
+```
 
 
-![hkust](README/hkust.gif)
 
 # LIO_SAM_6AXIS
 
@@ -17,6 +23,7 @@ LIO_SAM_6AXIS is an open-source SLAM project based on the  project [LIO_SAM](htt
   - GPS constraint visualization: This feature helps with debugging by allowing you to visualize the GPS constraints that are being used in the optimization.
   - Compatible with a range of lidars: LIO_SAM_6AXIS can be adapted to work with a range of lidars, including popular models like the VLP-16 ，Pandar32 and Ouster OS-1.
   - Easy to adapt: With minor changes to the original code, LIO_SAM_6AXIS can be adapted to work with your own sensors and lidars.
+![hkust](README/hkust.gif)
 
 ## Getting Started
 
