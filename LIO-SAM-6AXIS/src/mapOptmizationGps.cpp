@@ -373,7 +373,7 @@ public:
                 scan2MapOptimization();
 
                 saveKeyFramesAndFactor();
-
+                std::cout << "saveKeyFramesAndFactor" << std::endl;
                 correctPoses();
 
                 publishOdometry();
@@ -773,7 +773,7 @@ public:
 
     void performLoopClosure() {
         if (cloudKeyPoses3D->points.empty() == true) return;
-
+        std::cout << "performLoopClosure" << std::endl;
         mtx.lock();
         *copy_cloudKeyPoses3D = *cloudKeyPoses3D;
         *copy_cloudKeyPoses2D = *cloudKeyPoses3D;
@@ -785,7 +785,7 @@ public:
         int loopKeyPre;
         if (detectLoopClosureExternal(&loopKeyCur, &loopKeyPre) == false)
             if (detectLoopClosureDistance(&loopKeyCur, &loopKeyPre) == false) return;
-
+        std::cout << "loopKeyCur" << loopKeyCur << "loopKeyPre" << loopKeyPre << std::endl;  
         // extract cloud
         pcl::PointCloud<PointType>::Ptr cureKeyframeCloud(
                 new pcl::PointCloud<PointType>());
@@ -820,7 +820,7 @@ public:
         if (icp.hasConverged() == false ||
             icp.getFitnessScore() > historyKeyframeFitnessScore)
             return;
-
+        std::cout << "icp hasconverged" << icp.hasConverged() << "icp fitness score" << icp.getFitnessScore() << std::endl; 
         // publish corrected cloud
         if (pubIcpKeyFrames.getNumSubscribers() != 0) {
             pcl::PointCloud<PointType>::Ptr closed_cloud(
@@ -835,6 +835,7 @@ public:
         float x, y, z, roll, pitch, yaw;
         Eigen::Affine3f correctionLidarFrame;
         correctionLidarFrame = icp.getFinalTransformation();
+        std::cout << "correctionLidarFrame" << correctionLidarFrame.matrix() << std::endl; 
         // transform from world origin to wrong pose
         Eigen::Affine3f tWrong =
                 pclPointToAffine3f(copy_cloudKeyPoses6D->points[loopKeyCur]);
@@ -1990,11 +1991,14 @@ public:
     }
 
     void addLoopFactor() {
-        if (loopIndexQueue.empty()) return;
+        std::cout << "addLoopFactor" << std::endl;   
+        std::cout << "loopIndexQueueSize: " << loopIndexQueue.size() << std::endl;
 
+        if (loopIndexQueue.empty()) return;
         for (int i = 0; i < (int) loopIndexQueue.size(); ++i) {
             int indexFrom = loopIndexQueue[i].first;
             int indexTo = loopIndexQueue[i].second;
+            std::cout << "addLoopFactor: " << indexFrom << " " << indexTo << std::endl;
             gtsam::Pose3 poseBetween = loopPoseQueue[i];
             gtsam::noiseModel::Diagonal::shared_ptr noiseBetween = loopNoiseQueue[i];
             mtxGraph.lock();
@@ -2033,7 +2037,7 @@ public:
         // update iSAM
         isam->update(gtSAMgraph, initialEstimate);
         isam->update();
-
+        std::cout << "update gtsam done" << std::endl;
         if (aLoopIsClosed == true) {
             isam->update();
             isam->update();
@@ -2129,12 +2133,14 @@ public:
             // update key poses
             int numPoses = isamCurrentEstimate.size();
             for (int i = 0; i < numPoses; ++i) {
+                std::cout << cloudKeyPoses3D->points[i].x << cloudKeyPoses3D->points[i].y << cloudKeyPoses3D->points[i].z << std::endl; 
                 cloudKeyPoses3D->points[i].x =
                         isamCurrentEstimate.at<Pose3>(i).translation().x();
                 cloudKeyPoses3D->points[i].y =
                         isamCurrentEstimate.at<Pose3>(i).translation().y();
                 cloudKeyPoses3D->points[i].z =
                         isamCurrentEstimate.at<Pose3>(i).translation().z();
+                std::cout << cloudKeyPoses3D->points[i].x << cloudKeyPoses3D->points[i].y << cloudKeyPoses3D->points[i].z << std::endl; 
 
                 cloudKeyPoses6D->points[i].x = cloudKeyPoses3D->points[i].x;
                 cloudKeyPoses6D->points[i].y = cloudKeyPoses3D->points[i].y;

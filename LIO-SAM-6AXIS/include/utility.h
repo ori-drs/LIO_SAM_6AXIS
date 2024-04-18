@@ -213,7 +213,7 @@ public:
 
         nh.param<bool>("lio_sam_6axis/savePCD", savePCD, false);
         nh.param<std::string>("lio_sam_6axis/savePCDDirectory", savePCDDirectory, "/Downloads/LOAM/");
-        nh.param<std::string>("saveDirectory", saveDirectory, "/Downloads/LOAM/");
+        nh.param<std::string>("lio_sam_6axis/saveDirectory", saveDirectory, "/Downloads/LOAM/");
         nh.param<std::string>("sequence", sequence, "map");
         nh.param<std::string>("configDirectory", configDirectory, "map");
 

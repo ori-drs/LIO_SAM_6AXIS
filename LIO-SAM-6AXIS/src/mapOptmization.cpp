@@ -502,10 +502,10 @@ class mapOptimization : public ParamServer
 
 
   void loopClosureThread()
-  {
+{    std::cout << "Entering loopClosureThread" << std::endl;    
+
     if (loopClosureEnableFlag == false)
       return;
-
     ros::Rate rate(loopClosureFrequency);
     while (ros::ok())
     {
@@ -529,6 +529,7 @@ class mapOptimization : public ParamServer
 
   void performLoopClosure()
   {
+    std::cout << "Entering performLoopClosure" << std::endl;
     if (cloudKeyPoses3D->points.empty() == true)
       return;
 
@@ -543,7 +544,7 @@ class mapOptimization : public ParamServer
     if (detectLoopClosureExternal(&loopKeyCur, &loopKeyPre) == false)
       if (detectLoopClosureDistance(&loopKeyCur, &loopKeyPre) == false)
         return;
-
+    std::cout << "loopKeyCur: " << loopKeyCur << " loopKeyPre: " << loopKeyPre << std::endl;          
     // extract cloud
     pcl::PointCloud<PointType>::Ptr cureKeyframeCloud(new pcl::PointCloud<PointType>());
     pcl::PointCloud<PointType>::Ptr prevKeyframeCloud(new pcl::PointCloud<PointType>());
@@ -570,8 +571,9 @@ class mapOptimization : public ParamServer
     pcl::PointCloud<PointType>::Ptr unused_result(new pcl::PointCloud<PointType>());
     icp.align(*unused_result);
 
-    if (icp.hasConverged() == false || icp.getFitnessScore() > historyKeyframeFitnessScore)
-      return;
+    if (icp.hasConverged() == false || icp.getFitnessScore() > historyKeyframeFitnessScore){
+    std::cout << "loop clsoure icp failed to converge!" << std::endl;
+      return;}
 
     // publish corrected cloud
     if (pubIcpKeyFrames.getNumSubscribers() != 0)
@@ -604,6 +606,7 @@ class mapOptimization : public ParamServer
     loopNoiseQueue.push_back(constraintNoise);
     mtx.unlock();
 
+    std::cout << "loop clsoure detected!" << std::endl;    
     // add loop constriant
     loopIndexContainer[loopKeyCur] = loopKeyPre;
   }

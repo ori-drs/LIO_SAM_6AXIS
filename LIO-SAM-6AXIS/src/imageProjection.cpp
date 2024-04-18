@@ -331,10 +331,10 @@ public:
             for (size_t i = 0; i < tmpPandarCloudIn->size(); i++) {
                 auto &src = tmpPandarCloudIn->points[i];
                 auto &dst = laserCloudIn->points[i];
-                dst.x = src.y * -1;
-                dst.y = src.x;
-                //        dst.x = src.x;
-                //        dst.y = src.y;
+                // dst.x = src.y * -1;
+                // dst.y = src.x;
+                dst.x = src.x;
+                dst.y = src.y;
                 dst.z = src.z;
                 dst.intensity = src.intensity;
                 dst.ring = src.ring;
